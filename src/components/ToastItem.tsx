@@ -12,6 +12,12 @@ export const ToastItem: FC<ToastItemProps> = ({ toast, onRemove }) => {
   const [isExiting, setIsExiting] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(Date.now());
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMounted(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   const startTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -59,8 +65,16 @@ export const ToastItem: FC<ToastItemProps> = ({ toast, onRemove }) => {
     setIsExiting(true);
     setTimeout(() => onRemove(toast.id), 300);
   };
+
+  // Формируем классы с учётом состояний анимации
+  const getToastClassName = () => {
+    const baseClass = `toast toast-${toast.type}`;
+    if (!isMounted) return `${baseClass} entering`;
+    if (isExiting) return `${baseClass} exiting`;
+    return baseClass;
+  };
   return (
-    <div className={`toast toast-${toast.type}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div className={getToastClassName()} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <span>{toast.message}</span>
       <pre>{remainingTime}</pre>
       <button onClick={handleClose}>x</button>

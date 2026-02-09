@@ -5,7 +5,10 @@
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   background-color: #1a1a1a;
   color: #ffffff;
 }
@@ -56,9 +59,15 @@ button:hover {
   opacity: 0.9;
 }
 
-.btn-success { background: #10b981; }
-.btn-error { background: #ef4444; }
-.btn-warning { background: #f59e0b; }
+.btn-success {
+  background: #10b981;
+}
+.btn-error {
+  background: #ef4444;
+}
+.btn-warning {
+  background: #f59e0b;
+}
 
 .toast-list {
   position: absolute;
@@ -81,6 +90,8 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transform: translateX(0) scale(1);
+  transition: all 0.3s ease;
 }
 
 .toast button {
@@ -90,7 +101,27 @@ button:hover {
   font-size: 1.2rem;
 }
 
-.toast-success { background: #10b981; }
-.toast-error { background: #ef4444; }
-.toast-warning { background: #f59e0b; }
-.toast-info { background: #3b82f6; }
+.toast-success {
+  background: #10b981;
+}
+.toast-error {
+  background: #ef4444;
+}
+.toast-warning {
+  background: #f59e0b;
+}
+.toast-info {
+  background: #3b82f6;
+}
+
+/* Анимация появления */
+.toast.entering {
+  opacity: 0;
+  transform: translateY(-50px) scale(0.9);
+}
+
+/* Анимация исчезновения */
+.toast.exiting {
+  opacity: 0;
+  transform: translateY(50px) scale(0.8);
+}

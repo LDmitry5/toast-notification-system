@@ -50,11 +50,8 @@ describe("ToastItem", () => {
     // Act 3: убираем курсор (возобновляем таймер)
     fireEvent.mouseLeave(toastElement);
 
-    // Добавляем небольшую задержку для обновления таймера
-    advanceTime(500);
-
-    // Act 4: ждём оставшиеся 300 мс
-    advanceTime(3000);
+    // Act 4: Ждём завершения таймера
+    advanceTime(3500);
 
     // Assert 3: проверяем, что таймер сработал и тост был удалён
     expect(mockRemoveToast).toHaveBeenCalledWith("1");
