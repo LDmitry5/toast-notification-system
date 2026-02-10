@@ -7,29 +7,26 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback(
-    (toast: Omit<Toast, "id">) => {
-      const existingToast = toasts.find((t) => t.message === toast.message && t.type === toast.type);
+  const addToast = useCallback((toast: Omit<Toast, "id">) => {
+    setToasts((prevToasts) => {
+      const existingToast = prevToasts.find((t) => t.message === toast.message && t.type === toast.type);
 
       if (existingToast) {
-        // Обновляем таймер существующего тоста
-        setToasts((prev) =>
-          prev.map((t) => (t.id === existingToast.id ? { ...t, duration: toast.duration ?? 3000 } : t)),
-        );
-        return;
+        // Обновляем duration существующего тоста (сбрасываем таймер)
+        return prevToasts.map((t) => (t.id === existingToast.id ? { ...t, duration: toast.duration ?? 3000 } : t));
       }
 
+      // Создаём новый тост
       const id = Math.random().toString(36).substring(2, 9);
       const newToast: Toast = {
         id,
         ...toast,
-        duration: toast.duration ?? 3000, // по умолчанию 3 секунды
+        duration: toast.duration ?? 3000,
       };
 
-      setToasts((prev) => [...prev, newToast]);
-    },
-    [toasts],
-  );
+      return [...prevToasts, newToast];
+    });
+  }, []);
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
