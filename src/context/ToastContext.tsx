@@ -12,8 +12,16 @@ export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
       const existingToast = prevToasts.find((t) => t.message === toast.message && t.type === toast.type);
 
       if (existingToast) {
-        // Обновляем duration существующего тоста (сбрасываем таймер)
-        return prevToasts.map((t) => (t.id === existingToast.id ? { ...t, duration: toast.duration ?? 3000 } : t));
+        // Удаляем старый тост и создаём новый с тем же содержимым — это вызовет перемонтирование и сброс таймера
+        const newId = Math.random().toString(36).substring(2, 9);
+        return [
+          ...prevToasts.filter((t) => t.id !== existingToast.id),
+          {
+            id: newId,
+            ...toast,
+            duration: toast.duration ?? 3000,
+          },
+        ];
       }
 
       // Создаём новый тост

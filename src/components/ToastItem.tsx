@@ -11,11 +11,11 @@ export const ToastItem: FC<ToastItemProps> = ({ toast, onRemove }) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const startTimeRef = useRef<number>(Date.now());
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setRemainingTime(toast.duration ?? 3000);
+    if (!isPaused && !isExiting) startTimer();
   }, [toast.duration]);
 
   useEffect(() => {
@@ -43,18 +43,14 @@ export const ToastItem: FC<ToastItemProps> = ({ toast, onRemove }) => {
 
   useEffect(() => {
     if (isPaused || isExiting) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
+      if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
 
     startTimer();
 
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
+      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isPaused, isExiting, remainingTime]);
 
@@ -62,7 +58,7 @@ export const ToastItem: FC<ToastItemProps> = ({ toast, onRemove }) => {
 
   const handleMouseLeave = () => {
     setIsPaused(false);
-    startTimeRef.current = Date.now();
+    startTimer();
   };
 
   const handleClose = () => {
@@ -81,7 +77,13 @@ export const ToastItem: FC<ToastItemProps> = ({ toast, onRemove }) => {
     <div className={getToastClassName()} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <span>{toast.message}</span>
       <span>{remainingTime}</span>
-      <button onClick={handleClose}>x</button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handleClose();
+        }}>
+        x
+      </button>
     </div>
   );
 };

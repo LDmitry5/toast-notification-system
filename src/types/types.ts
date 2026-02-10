@@ -5,6 +5,7 @@ export interface Toast {
   message: string;
   type: ToastType;
   duration?: number;
+  resetTimer?: boolean;
 }
 
 export interface ToastContextType {
